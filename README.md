@@ -11,13 +11,14 @@
 ### ✨ Key Features
 
 1. **Sync Mode (`remskill` or `remskill sync`)**
-   - Reads the last 5 commits, current branch, and uncommitted WIP files.
+   - **First-time sync (New Project):** Previews recent commits and asks you how far back to include (e.g., last 5 commits, today's commits, last 10 commits, or since a specific commit).
+   - **Incremental sync (Existing Project):** Automatically reads `Last Synced Commit` from `../README.md` and fetches **all new commits since the last update** (`git log <last_hash>..HEAD`), plus uncommitted WIP files (`git status` / `git diff`).
    - Detects the project's Tech Stack and default Port automatically.
    - Updates **only** the current project's row and log section in `../README.md` without overwriting other projects.
    - Uses relative paths (`../README.md`) exclusively — 100% portable across machines and operating systems.
 
 2. **Status / Recall Mode (`remskill status` or `remskill check`)**
-   - Reads `../README.md` from the parent workspace directory and summarizes what was recently completed and what is still left unfinished (WIP) across all projects.
+   - Reads `../README.md` from the parent workspace directory and summarizes progress across all projects into a clean **Workspace Summary Table** with status badges (`🟢 Clean`, `🟡 WIP`, `⚠️ No Git`).
 
 ### 📁 Directory Structure
 
@@ -38,12 +39,12 @@ remskill/
    ```bash
    git clone <repo-url> ~/Documents/remskill
    ```
-2. Add the cloned path to `~/.gemini/config/skills.json`:
+2. Add the cloned path to `~/.gemini/config/skills.json` (on Windows, use the full path with forward slashes `C:/Users/...` instead of `~/`):
    ```json
    {
      "entries": [
        {
-         "path": "~/Documents/remskill"
+         "path": "C:/Users/<your-username>/Documents/remskill"
        }
      ]
    }
@@ -74,24 +75,25 @@ When working inside any subproject (e.g., `my-frontend-app`):
 ### ✨ ฟีเจอร์หลัก
 
 1. **โหมดบันทึก (`remskill` หรือ `remskill sync`)**
-   - อ่าน Commit ล่าสุด 5 รายการ, Branch ปัจจุบัน และไฟล์ที่แก้ไขค้างไว้ (Uncommitted / WIP)
+   - **รันครั้งแรกของโปรเจค (New Project):** สแกนดู Commit เบื้องต้นแล้วถามเราก่อนว่าจะให้ดึงย้อนหลังแค่ไหน (เช่น 5 Commit ล่าสุด, เฉพาะของวันนี้, 10 Commit ล่าสุด หรือระบุเอง)
+   - **รันครั้งถัดๆ ไป (Incremental Sync):** เช็ค `Last Synced Commit` ที่เคยบันทึกไว้ใน `../README.md` แล้วดึง **เฉพาะ Commit ใหม่ทั้งหมดที่เกิดขึ้นหลังจากอัปเดตครั้งก่อน** (`git log <last_hash>..HEAD`) อัตโนมัติ พร้อมเช็คไฟล์ที่ทำค้างไว้ (`git status` / `git diff`)
    - ตรวจเช็ค Tech Stack และ Port เบื้องต้นให้อัตโนมัติ
    - อัปเดตเฉพาะส่วนของโปรเจคตัวเองลงใน `../README.md` โดยไม่ทับข้อมูลโปรเจคอื่น
    - ใช้ Relative Path (`../README.md`) เสมอ ทำให้แชร์ให้ทีมหรือย้ายเครื่องได้ทันทีโดยไม่ต้องแก้โค้ด
 
 2. **โหมดทวนความจำ (`remskill status` หรือ `remskill check`)**
-   - อ่านไฟล์ `../README.md` ที่โฟลเดอร์กลาง แล้วสรุปให้ฟังว่าโปรเจคไหนทำอะไรค้างไว้บ้าง
+   - อ่านไฟล์ `../README.md` ที่โฟลเดอร์กลาง แล้วสรุปสถานะทุกโปรเจคออกมาเป็น **ตารางภาพรวม (Summary Table)** มองเห็นง่ายทันที พร้อมสัญลักษณ์สถานะ (`🟢 Clean`, `🟡 WIP`, `⚠️ No Git`)
 
 ### 🚀 วิธีติดตั้งและแชร์ให้คนอื่นใช้
 
 #### วิธีที่ 1: เชื่อมผ่าน Global `skills.json` (แนะนำ — ใช้ได้ทุกโปรเจคในเครื่อง)
 1. Clone repository นี้ไปไว้ในเครื่อง
-2. เพิ่ม Path ของโฟลเดอร์ `remskill` เข้าไปในไฟล์ `~/.gemini/config/skills.json`:
+2. เพิ่ม Path เต็มของโฟลเดอร์ `remskill` เข้าไปในไฟล์ `C:\Users\<ชื่อผู้ใช้>\.gemini\config\skills.json` (บน Windows แนะนำให้ใส่ Path เต็มโดยใช้ `/` แทน `~/`):
    ```json
    {
      "entries": [
        {
-         "path": "~/Documents/workdms/remskill"
+         "path": "C:/Users/gluee/Documents/workdms/remskill"
        }
      ]
    }
