@@ -8,7 +8,9 @@ description: >-
 
 `remskill` maintains a central `README.md` in the parent directory (`../README.md`) so developers can switch between multiple projects without losing track of what was done, what is still in progress (WIP), which ports are used, and how projects connect.
 
-> **Portability Rule:** Always resolve paths relatively (`../README.md` from a subproject, or `./README.md` if run from the workspace hub root). Never hardcode machine-specific user paths.
+> **Portability & Language Rule:**
+> - Always resolve paths relatively (`../README.md` from a subproject, or `./README.md` if run from the workspace hub root). Never hardcode machine-specific user paths.
+> - Match the language already used in `../README.md` (or the language the user speaks in chat, e.g., Thai or English).
 
 ---
 
