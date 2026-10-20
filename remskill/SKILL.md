@@ -18,8 +18,9 @@ description: >-
 
 Determine the mode from the user's request:
 
-1. **Sync Mode (Default)** — Triggered when the user invokes `remskill` (or `remskill sync` / `อัปเดต remskill`) inside a subproject, or asks to sync a specific project (e.g., `remskill dms-portal-v1`).
-2. **Status / Recall Mode** — Triggered when the user asks to check status (`remskill status`, `remskill check`, `ทำอะไรค้างไว้บ้าง`) to review `../README.md` without modifying it.
+1. **Sync Single Project Mode (Default)** — Triggered when the user invokes `remskill` (or `remskill sync` / `อัปเดต remskill`) inside a subproject, or asks to sync a specific project (e.g., `remskill dms-portal-v1`).
+2. **Batch Update Tracked Projects Mode** — Triggered when the user invokes `remskill update`, `remskill all`, `remskill sync-all`, or asks to "อัปเดตทั้งหมด". Refreshes ALL currently tracked projects in `../README.md` to their latest Git commits and WIP status in a single pass.
+3. **Status / Recall Mode** — Triggered when the user asks to check status (`remskill status`, `remskill check`, `ทำอะไรค้างไว้บ้าง`) to review `../README.md` without modifying it.
 
 ---
 
@@ -80,7 +81,37 @@ Reply concisely showing:
 
 ---
 
-## Mode 2: Status / Recall Mode (Read `../README.md`)
+## Mode 2: Batch Update Tracked Projects Mode (`remskill update` / `remskill all`)
+
+Use this mode when the user wants to bring all currently tracked projects up to date in one shot without scanning untracked or archived folders.
+
+### Step 1: Read Tracked Projects from `../README.md`
+1. Read `../README.md` (or `./README.md` if in the parent folder).
+2. Parse all tracked projects listed under **Section 5 (Project Logs)** (look for `### 📌 <project-name>` and any sub-repos listed under it).
+
+### Step 2: Inspect Each Tracked Project in Parallel or Sequence
+For each tracked project (and sub-repo):
+1. Navigate to the project directory (e.g., `../<project-name>` or `../<project-name>/<sub-repo>`).
+2. If `.git` exists:
+   - Check current branch (`git branch --show-current`).
+   - Read `Last Synced Commit` (`<last_hash>`) previously stored in `../README.md`.
+   - Run `git log <last_hash>..HEAD` to check for new commits.
+   - Run `git status -s` and `git diff --stat` to check for uncommitted WIP.
+3. If `.git` does not exist:
+   - Check if a `.git` repository was initialized since the last run. If still not, retain `⚠️ No Git` with latest file modification timestamp.
+
+### Step 3: Non-Destructively Refresh `../README.md`
+1. Update each project's row in **Section 1 (Project Overview Table)** with the latest branch, timestamp, and status.
+2. Update each project's entry in **Section 3 (Current Focus & WIP)**.
+3. Update each project's log under **Section 5 (Project Logs)** with new commits (if any), new `Last Synced Commit` hash, and current WIP status.
+4. Keep all architecture notes (Section 2) and commands (Section 4) intact.
+
+### Step 4: Display Fresh Workspace Summary Table
+Immediately render the updated **Markdown Summary Table** (same format as Mode 3) so the user gets an instant snapshot of all projects.
+
+---
+
+## Mode 3: Status / Recall Mode (Read `../README.md`)
 
 1. Read `../README.md` (or `./README.md` if in the parent folder).
 2. **Always present the response as a Markdown Summary Table as the primary view**, followed only by brief bullet points for critical WIP or warnings:
